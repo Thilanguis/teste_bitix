@@ -17,7 +17,6 @@ class Index{
             var a = $('#tipoPlano')[0]
             console.log(a)
 
-            // --
         // $(document).ready(function(){       
             $.getJSON("listaPrecos.json", function(data){
                 console.log(data)
@@ -25,8 +24,7 @@ class Index{
                 console.log("An error has occurred.");    
             });    
             //  });
-        // ==
-            
+ 
             if(numeroBeneficiarios > 1){
                 
                 var i

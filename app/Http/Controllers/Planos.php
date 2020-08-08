@@ -49,22 +49,39 @@ class Planos extends Controller
         foreach($jsonPlanos as $key => $planos){
             $json_final_planos[$planos->codigo] = $planos;
         }
-
+        
         dump($json_final_planos);
-
+        
         $arquivoPrecos  = file_get_contents(__DIR__.'/listaPrecos.json');
         $jsonPrecos = json_decode($arquivoPrecos);
-
+        
         $json_final_precos = [];
 
         foreach($jsonPrecos as $key => $precos){
             $json_final_precos[$precos->codigo] = $precos;
         }
-
+        
         dump($json_final_precos);
+        
 
-
-        dd($request->input('qntBeneficiarios'));
+        $codigoPlano = $request->input('tipoPlano');
+        
+        $minimoVidas = $request->input('qntBeneficiarios');
+        
+        $dados = array(); 
+        $count = 0;
+        $cod = 0;
+        foreach($json_final_precos as $key => $preco){
+            if($preco->codigo == $codigoPlano){
+                $count++;
+                $cod = $codigoPlano;
+            }
+        }
+        array_push($dados, $preco->faixa1);
+        array_push($dados, $preco->faixa2);
+        array_push($dados, $preco->faixa3);
+        dump($dados);
+        dd('oi');
     }
 
     /**

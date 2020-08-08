@@ -17352,15 +17352,13 @@ var Index = /*#__PURE__*/function () {
       $('.numeroBeneficiarios').on('change', function (e) {
         var numeroBeneficiarios = $('.numeroBeneficiarios').val();
         var a = $('#tipoPlano')[0];
-        console.log(a); // --
-        // $(document).ready(function(){       
+        console.log(a); // $(document).ready(function(){       
 
         $.getJSON("listaPrecos.json", function (data) {
           console.log(data);
         }).fail(function () {
           console.log("An error has occurred.");
         }); //  });
-        // ==
 
         if (numeroBeneficiarios > 1) {
           var i;
