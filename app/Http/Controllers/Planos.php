@@ -42,7 +42,8 @@ class Planos extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(FormValidation $request)
-    {
+    {   
+        dump($request->input());
         $arquivoPlanos  = file_get_contents(__DIR__.'/listaPlanos.json');
         $jsonPlanos = json_decode($arquivoPlanos);
 
@@ -58,7 +59,7 @@ class Planos extends Controller
         $json_final_precos = [];
 
         foreach($jsonPrecos as $key => $precos){
-            $json_final_precos[$precos->codigo] = $precos;
+            $json_final_precos[] = $precos;
         }
         
         dump($json_final_precos);
@@ -68,38 +69,50 @@ class Planos extends Controller
         
         $minimoVidas = $request->input('qntBeneficiarios');
         
-        $idade = $request->input('idadeBeneficiarios');
-        
-        $dados = array(); 
+        $idades = $request->input('idadeBeneficiarios');
         $cod = 0;
         $total = 0;
         $precoUnitario = 0;
         
         foreach($json_final_precos as $key => $preco){
             if($preco->codigo == $codigoPlano){
-                if($preco->minimo_vidas <= $minimoVidas){
-                    $total = $this::getPrecoUnitario($idade, $preco);
+                if($preco->minimo_vidas <= $minimoVidas){ 
+                    $total = $this::getPrecoUnitario($idades, $preco, $request);
                 }
             }
         }
-        // array_push($dados, $preco->faixa1);
-        // array_push($dados, $preco->faixa2);
-        // array_push($dados, $preco->faixa3);
-        dd($total);
+        $somaTotal = $this::getPrecoTotal($total);
+        dump($total);
+        dump($somaTotal);
+        dd('resultado');
     }
     
-    public function getPrecoUnitario($idade, $preco){
-        $precoUnitario = 0;
-        if($idade < 18){
-            $precoUnitario = $preco->faixa1;
-        }
-        elseif ($idade >= 18 && $idade <= 40){
-            $precoUnitario = $preco->faixa2;
-        }
-        else {
-            $precoUnitario = $preco->faixa3;
+    public function getPrecoUnitario($idades, $preco, $request){
+        $nomes = $request->input('nomeBeneficiario');
+        $precoUnitario = [];
+        foreach ($idades as $key => $idade) {
+            if($idade < 18){    
+                $precoUnitario[] = [(double) $preco->faixa1, $nomes[$key]];
+                dump('if',   $idade);
+            }
+            elseif ($idade >= 18 && $idade <= 40){
+                $precoUnitario[] = [(double) $preco->faixa2, $nomes[$key]];
+                dump('elseif', $idade);
+            }
+            else {
+                $precoUnitario[] = [(double) $preco->faixa3, $nomes[$key]];
+                dump('else', $idade);
+            }
         }
         return $precoUnitario;
+    }
+
+    public function getPrecoTotal($total){
+        $precoFinal = 0;
+        foreach ($total as $key => $preco) {
+            $precoFinal += $preco[0];
+        }
+        return $precoFinal;
     }
     
     /**
