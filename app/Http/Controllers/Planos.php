@@ -68,22 +68,40 @@ class Planos extends Controller
         
         $minimoVidas = $request->input('qntBeneficiarios');
         
+        $idade = $request->input('idadeBeneficiarios');
+        
         $dados = array(); 
-        $count = 0;
         $cod = 0;
+        $total = 0;
+        $precoUnitario = 0;
+        
         foreach($json_final_precos as $key => $preco){
             if($preco->codigo == $codigoPlano){
-                $count++;
-                $cod = $codigoPlano;
+                if($preco->minimo_vidas <= $minimoVidas){
+                    $total = $this::getPrecoUnitario($idade, $preco);
+                }
             }
         }
-        array_push($dados, $preco->faixa1);
-        array_push($dados, $preco->faixa2);
-        array_push($dados, $preco->faixa3);
-        dump($dados);
-        dd('oi');
+        // array_push($dados, $preco->faixa1);
+        // array_push($dados, $preco->faixa2);
+        // array_push($dados, $preco->faixa3);
+        dd($total);
     }
-
+    
+    public function getPrecoUnitario($idade, $preco){
+        $precoUnitario = 0;
+        if($idade < 18){
+            $precoUnitario = $preco->faixa1;
+        }
+        elseif ($idade >= 18 && $idade <= 40){
+            $precoUnitario = $preco->faixa2;
+        }
+        else {
+            $precoUnitario = $preco->faixa3;
+        }
+        return $precoUnitario;
+    }
+    
     /**
      * Display the specified resource.
      *
