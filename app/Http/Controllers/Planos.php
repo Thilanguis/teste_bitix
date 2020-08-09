@@ -43,7 +43,7 @@ class Planos extends Controller
      */
     public function store(FormValidation $request)
     {   
-        dump($request->input());
+        // dump($request->input());
         $arquivoPlanos  = file_get_contents(__DIR__.'/listaPlanos.json');
         $jsonPlanos = json_decode($arquivoPlanos);
 
@@ -51,7 +51,7 @@ class Planos extends Controller
             $json_final_planos[$planos->codigo] = $planos;
         }
         
-        dump($json_final_planos);
+        // dump($json_final_planos);
         
         $arquivoPrecos  = file_get_contents(__DIR__.'/listaPrecos.json');
         $jsonPrecos = json_decode($arquivoPrecos);
@@ -62,7 +62,7 @@ class Planos extends Controller
             $json_final_precos[] = $precos;
         }
         
-        dump($json_final_precos);
+        // dump($json_final_precos);
         
 
         $codigoPlano = $request->input('tipoPlano');
@@ -82,9 +82,16 @@ class Planos extends Controller
             }
         }
         $somaTotal = $this::getPrecoTotal($total);
-        dump($total);
-        dump($somaTotal);
-        dd('resultado');
+        // dump($total);
+        // dump($somaTotal);
+        // dd('resultado');
+        $nomePlano = $this::getTipoPlano($request);
+        
+        return view('precoPlanos', [
+            'total' => $total,
+            'somaTotal' => $somaTotal,
+            'nomePlano' => $nomePlano
+        ]);
     }
     
     public function getPrecoUnitario($idades, $preco, $request){
@@ -93,15 +100,15 @@ class Planos extends Controller
         foreach ($idades as $key => $idade) {
             if($idade < 18){    
                 $precoUnitario[] = [(double) $preco->faixa1, $nomes[$key]];
-                dump('if',   $idade);
+                // dump('if',   $idade);
             }
             elseif ($idade >= 18 && $idade <= 40){
                 $precoUnitario[] = [(double) $preco->faixa2, $nomes[$key]];
-                dump('elseif', $idade);
+                // dump('elseif', $idade);
             }
             else {
                 $precoUnitario[] = [(double) $preco->faixa3, $nomes[$key]];
-                dump('else', $idade);
+                // dump('else', $idade);
             }
         }
         return $precoUnitario;
@@ -113,6 +120,32 @@ class Planos extends Controller
             $precoFinal += $preco[0];
         }
         return $precoFinal;
+    }
+
+    public function getTipoPlano(Request $request){
+
+        $codigoPlano = $request->input('tipoPlano');
+
+        switch ($codigoPlano) {
+            case "1":
+                return "Bitix Customer Plano 1";
+                break;
+            case "2":
+                return "Bitix Customer Plano 2";
+                break;
+            case "3":
+                return "Bitix Customer Plano 3";
+                break;
+            case "4":
+                return "Bitix Customer Plano 4";
+                break;
+            case "5":
+                return "Bitix Customer Plano 5";
+                break;
+            case "6":
+                return "Bitix Customer Plano 6";
+                break;
+        }
     }
     
     /**
