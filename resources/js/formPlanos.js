@@ -1,8 +1,3 @@
-// const { type } = require("jquery")
-// import Noty from 'noty';
-
-const { isEmpty } = require("lodash")
-
 class Index{
     constructor() {
         $(document).ready(() => {
@@ -14,16 +9,6 @@ class Index{
     clonarFormulario(){
         $('.numeroBeneficiarios').on('change', (e) =>{
             let numeroBeneficiarios = $('.numeroBeneficiarios').val()
-            var a = $('#tipoPlano')[0]
-            console.log(a)
-
-        // $(document).ready(function(){       
-            $.getJSON("listaPrecos.json", function(data){
-                console.log(data)
-            }).fail(function(){    
-                console.log("An error has occurred.");    
-            });    
-            //  });
  
             if(numeroBeneficiarios > 1){
                 
